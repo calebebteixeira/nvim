@@ -27,6 +27,25 @@ vim.opt.scrolloff = 10
 -- Consider '-' as keyword
 vim.opt.iskeyword:append '-'
 
+-- Search and replace
+vim.keymap.set('n', '<C-s>', ':%s///gI<left><left><left><left>', { desc = 'Search and replace' })
+
+-- Dont loose yanked text when paste
+vim.keymap.set('x', 'p', '"_dP', { desc = 'Dont loose yanked text when paste' })
+
+-- Restart Lsp
+vim.keymap.set('n', '<leader>lq', ':LspRestart<cr>', { desc = 'Restart LSP' })
+
+-- Indent
+vim.keymap.set('v', '<', '<gv', { desc = 'Keep indent' })
+vim.keymap.set('v', '>', '>gv', { desc = 'Keep indent' })
+
+-- Create new buffer
+vim.keymap.set('n', '<leader>n', ':enew<cr>', { desc = 'Create new buffer' })
+
+-- Delete current buffer
+vim.keymap.set('n', '<leader>bc', ':bd!<cr>', { desc = 'Delete current buffer' })
+
 vim.keymap.set('n', '<leader>v', ':vsplit<cr>', { desc = 'Create vertical split' })
 vim.keymap.set('n', '<C-c>', '*``cgn', { desc = 'Replaces the word under cursor for whatever you want' })
 vim.keymap.set('n', '<C-a>', 'ggVG', { desc = 'Select all' })
@@ -41,7 +60,7 @@ vim.keymap.set('n', '<leader>w', ':w!<cr>', { desc = 'Move selected text down' }
 vim.keymap.set('n', '<leader>q', ':q<cr>', { desc = 'Move selected text down' })
 
 -- Acess closing open/close tags easily
-vim.keymap.set('', ';', '<Plug>(MatchitNormalForward)')
+vim.keymap.set({ 'n', 'v' }, ';', '%')
 
 -- Move to beginning/end of line without taking my fingers off of home row
 vim.keymap.set('n', 'H', '^')
@@ -102,6 +121,10 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  {
+    'andymass/vim-matchup',
+    event = 'BufReadPost',
+  },
   {
     'nvim-neo-tree/neo-tree.nvim',
     version = '*',
@@ -346,7 +369,15 @@ require('lazy').setup({
       -- You can add other tools here that you want Mason to install
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format lua code
+        'stylua',
+        'lua-language-server',
+        'typescript-language-server',
+        'vue-language-server',
+        'unocss-language-server',
+        'emmet-language-server',
+        'prettierd',
+        'css-lsp',
+        'json-lsp',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -375,9 +406,9 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
-        javascript = { { 'prettierd', 'prettier' } },
-        typescript = { { 'prettierd', 'prettier' } },
-        vue = { { 'prettierd', 'prettier' } },
+        -- javascript = { { 'prettierd', 'prettier' } },
+        -- typescript = { { 'prettierd', 'prettier' } },
+        -- vue = { { 'prettierd', 'prettier' } },
       },
     },
   },
@@ -525,7 +556,24 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'bash',
+        'c',
+        'css',
+        'go',
+        'graphql',
+        'html',
+        'javascript',
+        'json',
+        'lua',
+        'markdown',
+        'rust',
+        'scss',
+        'typescript',
+        'vim',
+        'vimdoc',
+        'vue',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
