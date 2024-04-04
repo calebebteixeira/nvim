@@ -27,8 +27,8 @@ vim.opt.scrolloff = 10
 -- Consider '-' as keyword
 vim.opt.iskeyword:append '-'
 
--- Search and replace
-vim.keymap.set('n', '<C-s>', ':%s///gI<left><left><left><left>', { desc = 'Search and replace' })
+-- Don't permit "eregex.vim" mess up with default search
+vim.g.eregex_default_enable = 0
 
 -- Dont loose yanked text when paste
 vim.keymap.set('x', 'p', '"_dP', { desc = 'Dont loose yanked text when paste' })
@@ -46,6 +46,9 @@ vim.keymap.set('n', '<leader>n', ':enew<cr>', { desc = 'Create new buffer' })
 -- Delete current buffer
 vim.keymap.set('n', '<leader>bc', ':bd!<cr>', { desc = 'Delete current buffer' })
 
+-- Delete all but current buffer
+vim.keymap.set('n', '<leader>bC', ':%bd|e#<cr>', { desc = 'Delete all but current buffer' })
+
 vim.keymap.set('n', '<leader>v', ':vsplit<cr>', { desc = 'Create vertical split' })
 vim.keymap.set('n', '<C-c>', '*``cgn', { desc = 'Replaces the word under cursor for whatever you want' })
 vim.keymap.set('n', '<C-a>', 'ggVG', { desc = 'Select all' })
@@ -59,8 +62,12 @@ vim.keymap.set('n', '<leader>w', ':w!<cr>', { desc = 'Move selected text down' }
 -- Quit
 vim.keymap.set('n', '<leader>q', ':q<cr>', { desc = 'Move selected text down' })
 
--- Acess closing open/close tags easily
-vim.keymap.set({ 'n', 'v' }, ';', '%')
+-- MATCHUP - Acess closing open/close tags easily
+vim.cmd [[
+  let g:matchup_matchparen_offscreen = {'method': 'scrolloff'}
+  map <silent> ; %
+  map <leader>; v;zf<esc>j
+]]
 
 -- Move to beginning/end of line without taking my fingers off of home row
 vim.keymap.set('n', 'H', '^')
@@ -132,6 +139,25 @@ require('lazy').setup({
     event = 'BufReadPost',
   },
   {
+    'othree/eregex.vim',
+    config = function()
+      vim.keymap.set('n', '<C-s>', ':%S///gI<left><left><left><left>', { desc = '[S]earch and replace with Perl like Regex' })
+    end,
+  },
+  {
+    'nvim-pack/nvim-spectre',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    config = function()
+      require('spectre').setup()
+      vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', { desc = 'Toggle [S]pectre' })
+      vim.keymap.set('n', '<leader>Sw', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
+        desc = '[S]pectre current [W]ord',
+      })
+    end,
+  },
+  {
     'nvim-neo-tree/neo-tree.nvim',
     version = '*',
     dependencies = {
@@ -178,7 +204,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>e', ':Neotree toggle<cr>')
     end,
   },
-  { 'numToStr/Comment.nvim',    opts = {} },
+  { 'numToStr/Comment.nvim', opts = {} },
   {
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -191,7 +217,7 @@ require('lazy').setup({
       },
     },
   },
-  {                     -- Useful plugin to show you pending keybinds.
+  { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
@@ -229,7 +255,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
       require('telescope').setup {
@@ -411,6 +437,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        html = { { 'prettierd', 'prettier' } },
         -- javascript = { { 'prettierd', 'prettier' } },
         -- typescript = { { 'prettierd', 'prettier' } },
         -- vue = { { 'prettierd', 'prettier' } },
@@ -682,7 +709,7 @@ require('lazy').setup({
   --    require('Comment').setup({})
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim',    opts = {} },
+  { 'numToStr/Comment.nvim', opts = {} },
 
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following lua:
@@ -717,7 +744,7 @@ require('lazy').setup({
   -- after the plugin has been loaded:
   --  config = function() ... end
 
-  {                     -- Useful plugin to show you pending keybinds.
+  { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
@@ -763,7 +790,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
