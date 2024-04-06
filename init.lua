@@ -129,6 +129,13 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   {
+    'ggandor/leap.nvim',
+    config = function()
+      vim.keymap.set({ 'n', 'v' }, 'f', '<Plug>(leap-forward)')
+      vim.keymap.set({ 'n', 'v' }, 'F', '<Plug>(leap-backward)')
+    end,
+  },
+  {
     'm4xshen/autoclose.nvim',
     config = function()
       require('autoclose').setup()
