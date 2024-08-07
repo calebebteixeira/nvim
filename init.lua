@@ -502,10 +502,10 @@ require("lazy").setup({
 			end,
 			formatters_by_ft = {
 				lua = { "stylua" },
-				html = { "prettierd", "prettier", stop_after_first = true },
-				javascript = { "prettierd", "prettier", stop_after_first = true },
-				typescript = { "prettierd", "prettier", stop_after_first = true },
-				php = { "php-cs-fixer" },
+				-- html = { "prettierd", "prettier", stop_after_first = true },
+				-- javascript = { "prettierd", "prettier", stop_after_first = true },
+				-- typescript = { "prettierd", "prettier", stop_after_first = true },
+				-- php = { "php-cs-fixer" },
 			},
 		},
 	},
@@ -779,13 +779,6 @@ require("lazy").setup({
 			lazy = "💤 ",
 		},
 	},
-})
-
-vim.api.nvim_create_autocmd("BufWritePre", {
-	pattern = "*",
-	callback = function(args)
-		require("conform").format({ bufnr = args.buf })
-	end,
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
