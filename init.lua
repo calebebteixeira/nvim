@@ -181,6 +181,13 @@ require("lazy").setup({
 		config = function()
 			require("oil").setup({
 				columns = { "icon" },
+        keymaps = {
+          ["<CR>"] = "actions.select",
+          ["<leader>r"] = "actions.refresh",
+          ["<leader>p"] = "actions.preview",
+          ["<leader>o"] = "actions.open_external",
+        },
+        use_default_keymaps = false,
 				view_options = {
 					show_hidden = false,
 				},
