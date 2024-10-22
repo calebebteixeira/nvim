@@ -38,6 +38,17 @@ return {
   },
   {
     "nvim-telescope/telescope.nvim",
+    defaults = {
+      vimgrep_arguments = {
+        "rg",
+        "--color=never",
+        "--no-heading",
+        "--with-filename",
+        "--line-number",
+        "--column",
+        "--ignore-case", -- Treat all searches as case-insensitive, including uppercase
+      },
+    },
     keys = {
       {
         "<leader><space>",
