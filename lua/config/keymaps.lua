@@ -20,6 +20,7 @@ vim.keymap.set("x", "p", '"_dP', { desc = "Dont loose yanked text on paste", rem
 vim.keymap.set("n", "<leader>w", ":w<cr>", { desc = "Save current buffer", silent = true })
 vim.keymap.set("n", "<leader>bc", ":bd!<cr>", { desc = "Delete current buffer" })
 vim.keymap.set("n", "<leader>bC", ":%bd!|e#<cr>", { desc = "Delete all but current buffer", silent = true })
+vim.keymap.set("n", "<leader>n", ":enew<cr>", { desc = "Create new buffer" })
 
 -- Restart Lsp
 vim.keymap.set("n", "<leader>cq", ":LspRestart<cr>", { desc = "Restart LSP" })
@@ -32,18 +33,12 @@ vim.keymap.set(
   { desc = "Search and replace with Perl like Regex", remap = true }
 )
 
+-- Create a key mapping
 function search_word_lowercase()
-  -- Get the word under the cursor
   local word = vim.fn.expand("<cword>")
-
-  -- Convert the word to lowercase
   local lower_word = string.lower(word)
-
-  -- Open Telescope's file search with the lowercase word as the prompt
   require("telescope.builtin").find_files({ default_text = lower_word })
 end
-
--- Create a key mapping
 vim.api.nvim_set_keymap(
   "n",
   "<leader>fw",
